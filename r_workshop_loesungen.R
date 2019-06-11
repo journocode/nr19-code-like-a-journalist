@@ -17,145 +17,78 @@
 
 #### 1.1 Basics ####
 
-
 # R als Taschenrechner ####
+# cmd + enter schickt Befehle in die Konsole
 
-5 + 2       # Addition
-7 - 4       # Substraktion
-
-6 * 8       # Multiplikation
-9 / 3       # Division
-
-(9 - 3) * 8 # Es gelten die ganz normalen Regeln der Mathematik
-
-3 ^ 2       #
-3 ** 2
-
+3 * (5 + 6)^2 / 4
 
 # Logische Vergleiche ####
 
-5 == 2          # Ist 5 das gleiche wie 2?
-5 != 2          # Ist 5 NICHT das gleiche wie 2?
-
-5 > 2           # Ist 5 größer als 2?
-5 >= 2          # Ist 5 größer oder gleich 2?
-
-3 ^ 2 == 3 ** 2 # Ist das wirklich das gleiche? 
-
+5 >= 5
+4 < 5 
+5 == 3 + 2
+3+2 != 7
 
 # Zuweisung von Variablen ####
 
 x # Variablenname, den wir aber noch nicht vergeben haben.
-  # Deshalb sagt uns R, dass die Variable "x" nicht zu finden ist:
-  # "Error: object 'x' not found"
+# Deshalb sagt uns R, dass die Variable "x" nicht zu finden ist.
 
-x <- 3 # Mit einem Pfeil "x" den Wert 3 zuordnen
-y = 5  # Das gleiche geht auch mit dem Gleichheitszeichen
+x = 3 # Mit einem Gleichheitszeichen kann man "x" den Wert 3 zuordnen
+# BTW: Geht auch mit "<-"
+
 
 x # Was steckt in x?
+# Du kannst nun mit x rechnen:
 
-# Du kannst nun mit y und x rechnen:
+2 * x
+y = 5
+x + 2 == y
 
-x + y
-xy = x + y
-xy
-
-# Wir können auch Strings zuweisen
+# Wir können auch Strings (Worte) zuweisen
 
 text = "SPAM"
-
-
+text = "3"
 
 # Nicht alles ist erlaubt bei Benennen von Zuweisungen
 
-var_1 = 3 # funktioniert!
-var-1 = 3 # funktioniert nicht!
-# "Error in var - 1 = 3 : could not find function "-<-""
-1var # funktioniert nicht!
+var_1 = "hier könnte Ihre Werbung stehen" # funktioniert!
+var-1 = "hier könnte Ihre Werbung stehen" # funktioniert nicht!
+1var  = "hier könnte Ihre Werbung stehen" # funktioniert nicht!
 # "Error: unexpected symbol in "1var""
 
 # Variablen löschen
 rm(var_1)
-remove(var_1)
+remove(var)
 
 
+# Funktionen ####
 
-#### 1.2 Funktionen und Pakete ####
-
-
-paste("SPAM", "SPAM") # paste() setzt Strings zusammen und speichert sie wieder als String
-paste("Das Ergebnis von", x, "plus", y, "ist", x + y) 
-# Man kann auch Variablen in der Funktion benutzen, und sogar andere Funktionen darin aufrufen (hier: "+")!
-
-
-# Ein paar grundlegende Funktionen ####
-
-?sum()                      # Hilfeseite aufrufen
-c(3, 6, 5)                  # Zahlen zu Vektoren verbinden
-sum(3, 6, 5)                # Summe berechnen
-
-x = c(1, 7, 5, 8, 3, 22, 122)
-mean(x)     # Arithmetisches Mittel
-sum(x) / length(x) # Gemeinhin auch "Durchschnitt" genannt
-
-median(x)   # Median
-sort(x)     # Wert in der Mitte der sortierten Werte
-
-round(3.141593, 2)          # Zahl runden auf zwei Nachkommastellen.
-                            # P.S.: Dezimalzahlen werden
-                            # in R mit Punkten getrennt!!
+paste("SPAM", "SPAM") # Die Funktion paste() setzt Strings zusammen und speichert sie wieder als String
+# Alles, was zwischen den Klammern steht, nennt man "Argumente" oder "Parameter"
+paste("Das Ergebnis von", x, "plus", y, "ist", x + y) # Man kann auch Variablen in der Funktion benutzen, und sogar andere Funktionen darin aufrufen (hier: "+")!
+?paste                 # Hilfeseiten aufrufen
 
 
-# Eigene Funktion schreiben ####
+#### 1.3 Lesen und Schreiben ####
 
-myfunction = function(x, y){
-      paste("Das Ergebnis von", x, "plus", y, "ist", x + y)
-}
+# Working Directory ####
+getwd()
+setwd("path/to/your/folder") #Shortcut: cmd + shift + H
+# Ohne Working Directory: R geht davon aus,
+# dass wir uns im Standard-Ordner befinden 
 
-myfunction(1, 5)
-myfunction(-5, 4)
-myfunction(2, "drei") # Fehler, da x+y hier nicht berechnet werden kann
+# Speichern und Einlesen ####
 
-# Möglichst deskriptive Funktionsnamen helfen dabei,
-# sich zu erinnern, was die Funktion macht
-was_ist_groesser = function(x, y){
-  ifelse(x > y, return(x), return(y)) # Bedingter Output
-}
-
-was_ist_groesser(3, 4)
-was_ist_groesser(4, 3)
-
-# RStudio ist so clever, dass es eure geschriebenen
-# Funktionen im Inhaltsverzeichnis vermerkt,
-# um sie leichter wiederzufinden
-
-# Pakete mit Zusatzfunktionen laden ####
-
-#install.packages("tidyverse")   # Paket installieren (Internetverbindung notwendig!)
-library(tidyverse)               # Paket laden
+# Datensätze einlesen ####
+?read.csv #Hilfeseite aufrufen
+ew19 = read.csv("ew19.csv", fileEncoding = "utf-8", sep = ";") # immer schön das Encoding prüfen!
+# FRAGE: was müssen wir hier einstellen, damit es richtig eingelesen wird?
 
 
-#### 1.3 Datenstrukturen ####
-
-# Vektoren ####
-
-vec = c(1, 2, 3, 4, 5)  # Kennen wir schon!
-
-vec2 = 6:10             # Vektor aus allen Zahlen zwischen der ersten und
-                        # der zweiten in Einer-Schritten.
-
-c("eins", "zwei", 3)    # Sobald Strings in einem Vektor vorkommen,
-                        # werden auch die vorkommenden Zahlen als Strings gespeichert
-
-# Data Frames ####
-
-df = data.frame(col1 = vec, col2 = vec2, col3 = c("a", "b", "c", "d", "e"))
-# Alle Spalten müssen die gleiche Länge haben!
-
-df        # Datensatz in Konsole anzeigen
-View(df)  # Datensatz als filter- und sortierbare Tabelle öffnen
-          # Tipp: Auf den Spaltennamen hovern,
-          # um Infos über die Spalte zu bekommen!
+# Datensatz speichern
+write.csv(ew19, file = "ew19_copy.csv", row.names = FALSE)  # Man kann auch u.a. das Dezimal- und das 
+# Spaltentrennzeichen festlegen, siehe ?write.csv
 
 
 
@@ -191,66 +124,44 @@ median(df$col1)
 #### 1.5 Lesen und Schreiben ####
 
 
-# Working Directory ####
-
-# Ohne Working Directory: R geht davon aus,
-# dass wir uns im Standard-Ordner befinden 
-btw17 = read.csv("btw17.csv")
-
-# Working Directory setzen
-setwd("Pfad/zu/meinem/Ordner")
-# Working Directory abrufen
-getwd()
-
-# Mit Working Directory: Ich kann Dateien direkt im Ordner aufrufen
-btw17 = read.csv("btw17.csv")
-
-
-# Speichern und Einlesen ####
-
-# Datensatz speichern und einlesen
-?write.csv
-write.csv(df, "test.csv", row.names = F)  # Man kann auch u.a. das Dezimal- und das 
-                                          # Spaltentrennzeichen festlegen, siehe ?write.csv
-
 
 #### 1.6 Spaß mit Daten: Funktionen mit dem Beispieldatensatz ausprobieren ####
 
 # Spaltennamen-Übersicht
-names(btw17)
+names(ew19)
 
 # Wie viele Einwohner haben die Wahlkreise zusammen?
-sum(btw17$Einwohner) #82175300 -> ca. 82 Mio.
+sum(ew19$Einwohner) #82175300 -> ca. 82 Mio.
 
 # Wie viele Einwohner hat ein Wahlkreis im Durchschnitt?
-mean(btw17$Einwohner) #274 Tausend
-median(btw17$Einwohner) #217 Tausend
+mean(ew19$Einwohner) #274 Tausend
+median(ew19$Einwohner) #217 Tausend
 
 # Füge eine neue Spalte hinzu namens "Nichtwähler" (Anzahl der Wahlberechtigten
 # Zweitstimmen minus die Anzahl der Zweitstimmen-Wähler)
-btw17$Nichtwähler = btw17$Wahlberechtigte - btw17$Wähler
+ew19$Nichtwähler = ew19$Wahlberechtigte - ew19$Wähler
 
 # Was ist die höchste Anzahl Nichtwähler in einem Wahlkreis?
-max(btw17$Nichtwähler) #76455
+max(ew19$Nichtwähler) #76455
 
 # Macht eine Grafik mit Punkten: Einkommen vs. *Anteil* FDP-Stimmen
-plot(btw17$Einkommen, btw17$FDP/btw17$Gültige)
+plot(ew19$Einkommen, ew19$FDP/ew19$Gültige)
 #Was kann man daraus ablesen?
 
 ## Für Fortgeschrittene ##
 
 # Was ist der höchste *Anteil* Nichtwähler?
-max(btw17$Nichtwähler / btw17$Wahlberechtigte) #0.3526753 -> 35 %
+max(ew19$Nichtwähler / ew19$Wahlberechtigte) #0.3526753 -> 35 %
 
 # Füge eine neue Spalte namens MigHig.Anteil hinzu für den Anteil Menschen mit Migrationhintergrund?
-btw17$MigHig.Anteil = btw17$MigHig / btw17$Einwohner
+ew19$MigHig.Anteil = ew19$MigHig / ew19$Einwohner
 
 # In welcher Zeile steht der Wahlkreis mit dem höchsten Anteil Menschen mit Migrationhintergrund?
 ?which.max #Tipp
-which.max(btw17$MigHig.Anteil) #nr 183
+which.max(ew19$MigHig.Anteil) #nr 183
 
 # Wie heißt dieser Wahlkreis?
-btw17[183, 2] #Frankfurt am Main I
+ew19[183, 2] #Frankfurt am Main I
 
 # Wer schon fertig ist: Denkt euch noch ein paar Fragen aus!
 
@@ -278,35 +189,35 @@ library(dplyr)
 
 ### Nichtwähler berechnen mit mutate
 ?mutate
-btw17 = mutate(btw17, Nichtwähler = Wahlberechtigte - Wähler)
+ew19 = mutate(ew19, Nichtwähler = Wahlberechtigte - Wähler)
 #Man kann sogar mehrere neue Spalten hinzufügen
 
 # AUFGABE:
 # Füge eine Spalte hinzu namens "Nichtwähleranteil": "Nichtwähler" geteilt durch "Wahlberechtigte",
 # und eine namens "AFD.Anteil": Zweitstimmen für die AfD geteilt durch die Gesamtanzahl gültiger Stimmen
-btw17 = mutate(btw17,
+ew19 = mutate(ew19,
                Nichtwähleranteil = Nichtwähler / Wahlberechtigte, 
                AFD.Anteil = AFD / Gültige)
 
 # Mehrere Funktionen hintereinander ausführen ####
 
 #OPTION 1: Mehrere Zeilen --> Verbraucht Platz
-btw17 = mutate(btw17, Nichtwähler = Wahlberechtigte - Wähler)
-btw17 = arrange(btw17, Nichtwähler)
+ew19 = mutate(ew19, Nichtwähler = Wahlberechtigte - Wähler)
+ew19 = arrange(ew19, Nichtwähler)
 
 #OPTION 2: Schachteln --> Unübersichtlich
-btw17 = arrange( mutate(btw17, Nichtwähler = Wahlberechtigte - Wähler), Nichtwähler)
+ew19 = arrange( mutate(ew19, Nichtwähler = Wahlberechtigte - Wähler), Nichtwähler)
 
 #OPTION 3 mit dplyr: Piping (%>%) --> Viel schöner!
 #Tipp: Strg + Shift + M / Cmd + Shift + M
-btw17 = btw17 %>%
+ew19 = ew19 %>%
         mutate(Nichtwähler = Wahlberechtigte - Wähler) %>%
         arrange(-Nichtwähler)
 
 # AUFGABE:
 # Füge erst mit mutate() den Nichtwähler- und AfD-Anteil hinzu (wie in der Aufgabe zuvor)
 # und sortiere dann absteigend nach AfD-Anteil.
-btw17 = btw17 %>% 
+ew19 = ew19 %>% 
       mutate(Nichtwähleranteil = Nichtwähler / Wahlberechtigte, 
              AFD.Anteil = AFD / Gültige) %>% 
       arrange(-AFD.Anteil)
@@ -314,20 +225,20 @@ btw17 = btw17 %>%
 ### "group_by" und "summarize":  Pivot-Tabellen auf Speed ###
 
 # BEISPIEL: Was ist der Anteil Grünen-Wähler pro Bundesland? ####
-btw17_bl = btw17 %>% #Mit Originaldatensatz starten
+ew19_bl = ew19 %>% #Mit Originaldatensatz starten
             group_by(Bundesland) %>% #Nach Bundesländern gruppieren
             summarize(GRÜNE = sum(GRÜNE), GRÜNE.Anteil = GRÜNE / sum(Einwohner)) %>% #Zusammenfassen: Berechnet Anteil Grünen-Wähler jeweils für die Bundesländer
             arrange(-GRÜNE) # Absteigend nach Anteil Grünen-Wähler sortieren
 
 # AUFGABE:
-# Erstelle einen Datensatz wie oben namens "btw17_bl" mit den Spalten:
+# Erstelle einen Datensatz wie oben namens "ew19_bl" mit den Spalten:
 # Bundesland, Anteil Menschen mit Migrationshintergrund und AFD-Anteil
 # Rezept:
-# 1. Mit Originaldatensatz btw17 starten
+# 1. Mit Originaldatensatz ew19 starten
 # 2. Nach Bundesländern gruppieren
 # 3. Zusammenfassen: Anteil Menschen mit Migrationshintergrund berechnen und AfD-Stimmen-Anteil berechnen
 # 4. Sortieren: Absteigend nach Anteil Menschen mit Migrationshintergrund
-btw17_bl = btw17 %>%
+ew19_bl = ew19 %>%
       group_by(Bundesland) %>% #Nach Bundesländern gruppieren
       summarize(MigHig.Anteil = sum(MigHig) / sum(Einwohner),
                 AFD.Anteil= sum(AFD) / sum(Gültige)) %>%
@@ -357,7 +268,7 @@ library(ggplot2)
 #  auf der y-Achse soll der AfD-Anteil sein
 #  jeder Punkt soll mit dem Namen des Bundeslandes beschriftet sein
 
-ggplot(btw17_bl, aes(x = MigHig.Anteil, y = AFD.Anteil, label = Bundesland)) + #Spalten auf die Dimensionen der Grafik verteilen
+ggplot(ew19_bl, aes(x = MigHig.Anteil, y = AFD.Anteil, label = Bundesland)) + #Spalten auf die Dimensionen der Grafik verteilen
       geom_point(size=5, color = "orange") + # Punkte für Streudiagramm hinzufügen
       geom_text(hjust=0.5, vjust = 2) + #Beschriftung hinzufügen
       labs(x = "Anteil Menschen mit Migrationshintergrund", y = "Stimmenanteil der AfD") + #gib dem Plot schöne Achsenbeschriftungen
@@ -375,7 +286,7 @@ ggplot(btw17_bl, aes(x = MigHig.Anteil, y = AFD.Anteil, label = Bundesland)) + #
 #  jeder Punkt soll nach dem Bundesland eingefärbt sein
 #  die Größe des Punktes soll sich nach der Anzahl Wähler im Wahlkreis richten
 
-ggplot(btw17, aes(x = MigHig/Einwohner, y = AFD.Anteil, color = Bundesland, size = Wähler)) +
+ggplot(ew19, aes(x = MigHig/Einwohner, y = AFD.Anteil, color = Bundesland, size = Wähler)) +
       geom_point() #+
       #theme_minimal() #Man kann in ggplot alles selbst gestalten. Vorgefertigte "themes" machen es einfacher.
 
@@ -383,10 +294,10 @@ ggplot(btw17, aes(x = MigHig/Einwohner, y = AFD.Anteil, color = Bundesland, size
 
 # Füge eine neue Spalte zum Datensatz hinzu, die sagt: Liegt dieser Wahlkreis im Osten oder im Westen?
 osten = c("Brandenburg", "Sachsen-Anhalt", "Sachsen", "Mecklenburg-Vorpommern", "Thüringen")
-btw17$osten = btw17$Bundesland %in% osten
+ew19$osten = ew19$Bundesland %in% osten
 
 # Mach BEISPIEL 2 nochmal, nur diesmal nach Osten oder Westen eingefärbt
-ggplot(btw17, aes(x = MigHig/Einwohner, y = AFD.Anteil, color = osten, size = Wähler)) + geom_point()
+ggplot(ew19, aes(x = MigHig/Einwohner, y = AFD.Anteil, color = osten, size = Wähler)) + geom_point()
 # Das geht auch mit Einkommen. Lege das Einkommen auf die x-Achse
 
 #### 2.3 tidyr ####
@@ -404,25 +315,25 @@ library(tidyr)
 #Also:      "Schmaler" Datensatz (wenig Spalten) statt "Breiter Datensatz" (viele Spalten)
 
 #Der Einfachheit halber: Behalten wir einmal nur die Spalten mit den Zweitstimmen pro Partei.
-btw17_tidy = btw17[,c(1:3, 11:16)] #Alle überflüssigen Infos weglassen
-names(btw17_tidy) #Probe: Schauen, welche Spalten noch da sind
+ew19_tidy = ew19[,c(1:3, 11:16)] #Alle überflüssigen Infos weglassen
+names(ew19_tidy) #Probe: Schauen, welche Spalten noch da sind
 
 # BEISPIEL: tidyr in Action ####
 # Datensatz umbauen: Von breit zu schmal
-btw17_tidy = gather(btw17_tidy, Partei, Zweitstimmen, 4:9)
+ew19_tidy = gather(ew19_tidy, Partei, Zweitstimmen, 4:9)
 # Umgekehrt: Von schmal zu breit
-btw17_tidy = spread(btw17_tidy, Partei, Zweitstimmen)
+ew19_tidy = spread(ew19_tidy, Partei, Zweitstimmen)
 
 
 ### AUFGABE: Wir wollen alle Stimmanteile bequem auf einmal ausrechnen. ####
-### Mit dplyr und der gather() Funktion: Baue aus btw17 einen Datensatz mit den Spalten:
+### Mit dplyr und der gather() Funktion: Baue aus ew19 einen Datensatz mit den Spalten:
 ### Bundesland, Partei, Anteil Stimmen, Anzahl Stimmen
 
 #Rezept:
-#1. Starte mit den Spalten von btw17, die wir brauchen
-btw17_tidy = btw17[,c(1:3, 11:16)] %>% #Schalte die Funktionen mit der Pipe hintereinander
+#1. Starte mit den Spalten von ew19, die wir brauchen
+ew19_tidy = ew19[,c(1:3, 11:16)] %>% #Schalte die Funktionen mit der Pipe hintereinander
 #2. Datensatz umbauen: Von breit zu schmal, wie eben
-      gather(Partei, Zweitstimmen, 4:9) %>% #"btw17" muss hier nicht mehr als erstes stehen
+      gather(Partei, Zweitstimmen, 4:9) %>% #"ew19" muss hier nicht mehr als erstes stehen
 #3. Nach Bundesland und Partei gruppieren
       group_by(Bundesland, Partei) %>%    #<-- SELBST AUSFÜLLEN
 #4. Zweitstimmen aufsummieren
@@ -435,7 +346,7 @@ btw17_tidy = btw17[,c(1:3, 11:16)] %>% #Schalte die Funktionen mit der Pipe hint
 
 # LETZTE AUFGABE: Gestapeltes Balkendiagramm mit ggplot ####
 farben = c("#2a8fc6", "#f0c80f", "#6ea500", "#ce368d", "#be232d", "black")
-ggplot(btw17_tidy, aes(x = Bundesland, y=Anteil, fill=Partei)) +
+ggplot(ew19_tidy, aes(x = Bundesland, y=Anteil, fill=Partei)) +
       geom_col() +
       geom_hline(aes(yintercept = 0.5)) + #Linie an der 50-Prozent-Marke
       coord_flip() + #Horizontales Balkendiagramm statt vertikales Säulendiagramm

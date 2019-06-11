@@ -70,7 +70,7 @@ paste("Das Ergebnis von", x, "plus", y, "ist", x + y) # Man kann auch Variablen 
 ?paste                 # Hilfeseiten aufrufen
 
 
-#### 1.3 Lesen und Schreiben ####
+#### 1.2 Lesen und Schreiben ####
 
 # Working Directory ####
 getwd()
@@ -82,133 +82,109 @@ setwd("path/to/your/folder") #Shortcut: cmd + shift + H
 
 # Datensätze einlesen ####
 ?read.csv #Hilfeseite aufrufen
-ew19 = read.csv("ew19.csv", sep = ",", fileEncoding = "utf-8")
-#Encoding prüfen!
+ew19 = read.csv("ew19.csv", fileEncoding = "utf-8", stringsAsFactors = F, sep = ";") # immer schön das Encoding prüfen!
+# FRAGE: was müssen wir hier einstellen, damit es richtig eingelesen wird?
 
 # Datensatz speichern
-write.csv(ew19, file = "ew19_copy.csv", row.names = FALSE)  # Man kann auch u.a. das Dezimal- und das 
-                                                              # Spaltentrennzeichen festlegen, siehe ?write.csv
+write.csv(ew19, file = "ew19_copy.csv", row.names = FALSE)  # Man kann auch u.a. das Dezimal- und das Spaltentrennzeichen festlegen, siehe ?write.csv
 
 
-
-
-#### 1.4 Datenstrukturen ####
+#### 1.3 Datenstrukturen ####
 
 # Data Frames ####
-#Tabellen: Jede Spalte ist ein Vektor
+# Tabellenförmige Datensätze
 
-df = data.frame(col1 = 1:5, col2 = 6:10, col3 = c("a", "b", "c", "d", "e"))
-# Alle Spalten müssen die gleiche Länge haben!
-
-df        # Datensatz in Konsole anzeigen
-str(df)   # Struktur vom Datensatz in der Konsole anzeigen
-View(df)  # Datensatz als filter- und sortierbare Tabelle öffnen
+ew19     # Datensatz in Konsole anzeigen
+?names() # Spaltennamen-Übersicht
+?nrow()  # Anzahl der Zeilen
+?head()  # Nur die ersten 6 Zeilen anzeigen lassen. FRAGE: Wie können wir uns die ersten *10* Zeilen ausgeben lassen?
+?str()   # Struktur vom Datensatz in der Konsole anzeigen
+?View()  # Datensatz als filter- und sortierbare Tabelle öffnen
 # Tipp: Auf den Spaltennamen hovern,
 # um Infos über die Spalte zu bekommen!
 
-# Spaltennamen-Übersicht
-names(ew19)
+# In data frames ist jede Spalte ein *Vektor*
 
 # Vektoren ####
 # Reihen von Zahlen
 
 vec = c(1, 2, 3, 4, 5)  # c() für "concatenate"
-vec2 = 6:10             # Vektor aus allen Zahlen zwischen der ersten und der zweiten in Einer-Schritten.
+vec = 6:10             # Vektor aus allen Zahlen zwischen der ersten und der zweiten in Einer-Schritten.
+
+# So baut man data frames selbst:
+df = data.frame(col1 = 1:5, col2 = vec, col3 = c("a", "b", "c", "d", "e"))
+# Alle Spalten müssen die gleiche Länge haben!
 
 
+#### 1.4 Suchen & Finden ####
+# Hinweis: Die meisten Programmiersprachen beginnen bei 0 mit dem zählen. R beginnt bei 1.
 
-#### Pakete mit Zusatzfunktionen laden ####
+vec[2]              # Zweites Element von "vec". Das zwischen den eckigen Klammern nennt man "Index"
+ew19[1,3]           # Erste Zeile, dritte Spalte
+                    # Data Frames haben zwei Dimensionen, deshalb brauchen wir zwei Indizes, um ein Element zu finden
+ew19[,2]            # Nimm nur die zweite Spalte
 
-install.packages("tidyverse")   # Paket installieren (Internetverbindung notwendig!)
-library(tidyverse)               # Paket laden
+#FRAGE: Was bewirken wohl die folgenden Zeilen?
+ew19[3,]
+ew19[,2:4]
+ew19[c(15,55),]
 
+# Noch einfacher: Der Dollar-Operator
 
-#### 1.5 Suchen & Finden ####
-
-df[1]                       # Nimm nur die erste Spalte
-df[1:3]                 # Nimm nur die erste und dritte Spalte
-
-df[,1]                     # Nimm nur die erste Zeile
-df[1, 3]                     # Erste Zeile, dritte Spalte
-df[1:3,]
-
-df["col1"]                  # Spalten können in eckigen Klammern auch
-# mit dem Namen angesteuert werden
-
-df$col1                     # Eine Spalte mit dem Namen
-# ansteuern mittels $-Operator
-df$col2[2]
+ew19$kreisname               # Eine Spalte mit dem Namen ansteuern mittels $-Operator. Das Resultat ist ein Vektor
+# FRAGE: Wie bekomme ich mithilfe des Dollar-Operators wohl das dritte Element von den Kreisnamen?
 
 
-df[1] + df[2]               # Mit Spalten rechnen
+#### 1.5 Rechnen mit Datensätzen ####
 
-df$groko = df$col1 + df$col2  # Neue Spalte kreieren
+ew19$Groko = ew19$Union + ew19$SPD     # Mit Spalten kann man auch rechnen!
 
-#Berechne die Summe von allen Zahlen in der ersten Spalte auf zwei verschiedenen Wegen
-sum(df$col1)
-sum(df[1])
-x = c(df$col1)
-sum(x)
-
-#Berechne den Durchschnitt (mean oder median) von allen Zahlen in der ersten Spalte
-mean(df$col1)
-median(df[,1])
+# AUFGABE: Füge eine neue Spalte hinzu namens "Gruene.anteil", die den Stimmanteil der Grünen wiedergibt.
+#          ACHTUNG: Welche Spalten brauchst du dafür?
 
 
-#### 1.4 Einfache Grafiken ####
+# Einige hilfreiche Funktionen
+
+sum()    # Summe ausrechnen 
+mean()   # Arithmetisches Mittel
+median() # Median
+max()    # Maximum
+min()    # Minimum
+
+
+# Wie viele Einwohner haben die Landkreise zusammen? Ergibt diese Zahl Sinn?
+
+# Wie viele Einwohner hat ein Landkreis im Durchschnitt?
+
+# Was ist der höchste Grünen-Wähler-Anteil?
+
+# In welcher Zeile steht der Landkreis mit dem höchsten Anteil an Grünen-Wählern?
+# Tipp: ?which.max()
+
+# BONUS: Wie heißt dieser Landkreis?
+
+
+#### 1.6 Einfache Grafiken ####
 
 # Punkte oder Linien
-plot(df$col1, df$col2, type = "l")
+plot(ew19$junge, ew19$alte)
 
 # Balken
-barplot(df$col2, names.arg = df$col3)
+barplot(ew19$einwohner[1:10], names.arg = ew19$kreisname[1:10])
+
+# Macht eine Grafik mit Punkten:
+
+# Anteil junger Leute vs. Anteil Grünen-Stimmen
+plot(ew19$einkommen, ew19$FDP / ew19$gueltige)
+
+# BONUS: Anteil junger Leute vs. *Anteil* Stimmen für Volt Deutschland
 
 
+#### 1.7 Pakete mit Zusatzfunktionen laden ####
+# Für Teil 2 bitte machen! :)
 
-
-
-
-
-
-#### 1.7 Spaß mit Daten: Funktionen mit dem Beispieldatensatz ausprobieren ####
-
-
-
-# Wie viele Einwohner haben die Wahlkreise zusammen?
-sum(ew19$Einwohner)
-
-# Wie viele Einwohner hat ein Wahlkreis im Durchschnitt?
-mean(ew19$Einwohner)
-
-# Füge eine neue Spalte hinzu namens "Nichtwähler" (Anzahl der Wahlberechtigten minus die Anzahl der Wähler)
-ew19$Nichtwähler = ew19$Wahlberechtigte - ew19$Wähler
-
-# Was ist die höchste Anzahl Nichtwähler in einem Wahlkreis?
-# Tipp: ?max()
-max(ew19$Nichtwähler)
-
-# Macht eine Grafik mit Punkten: Einkommen vs. *Anteil* FDP-Stimmen
-plot(ew19$GRÜNE, ew19$Einkommen)
-
-## Für Fortgeschrittene ##
-
-# Was ist der höchste *Anteil* Nichtwähler?
-ew19$Nichtwähler.Anteil = ew19$Nichtwähler / ew19$Wahlberechtigte
-max(ew19$Nichtwähler.Anteil)
-max(ew19$Nichtwähler / ew19$Wahlberechtigte)
-
-# In welcher Zeile steht der Wahlkreis mit dem höchsten Anteil Menschen mit Migrationhintergrund?
-# Tipp: ?which.max()
-ew19$MigHig.Anteil = ew19$MigHig / ew19$Einwohner
-which.max(ew19$MigHig / ew19$Einwohner)
-
-
-# Wie heißt dieser Wahlkreis?
-ew19$Wahlkreisname[which.max(ew19$MigHig / ew19$Einwohner)]
-ew19[183, 2]
-
-# Wer schon fertig ist: Denkt euch noch ein paar Fragen aus!
-plot(ew19$MigHig.Anteil, ew19$AFD / ew19$Einwohner)
+install.packages("tidyverse")   # Paket installieren (Internetverbindung notwendig!)
+library(tidyverse)              # Paket laden
 
 
 #### NEXT UP:
@@ -318,15 +294,15 @@ ggplot(ew19_bl, aes(x = MigHig.Anteil, y = AFD.Anteil, label = Bundesland)) + #S
 
 #FRAGE: Was erkennt man hier?
 
-#Ein genauerer Blick auf die einzelnen Wahlkreise.
-#BEISPIEL 2: Scatterplot: Anteil Menschen mit Migrationshintergrund vs. AfD-Anteil pro Wahlkreis, ####
+#Ein genauerer Blick auf die einzelnen Landkreise.
+#BEISPIEL 2: Scatterplot: Anteil Menschen mit Migrationshintergrund vs. AfD-Anteil pro Landkreis, ####
 #            eingefärbt nach Bundesland, Größe nach Anzahl der Wähler
 # Anforderungen: 
-#  für jeden Wahlkreis soll ein Punkt da sein
+#  für jeden Landkreis soll ein Punkt da sein
 #  auf der x-Achse soll der Anteil Menschen mit Migrationshintergrund sein
 #  auf der y-Achse soll der AfD-Anteil sein
 #  jeder Punkt soll nach dem Bundesland eingefärbt sein
-#  die Größe des Punktes soll sich nach der Anzahl Wähler im Wahlkreis richten
+#  die Größe des Punktes soll sich nach der Anzahl Wähler im Landkreis richten
 
 ggplot(ew19, aes(x = MigHig/Einwohner, y = AFD/Gültige, color = Bundesland, size = Einwohner)) +
       geom_point() +
@@ -336,7 +312,7 @@ ggplot(ew19, aes(x = MigHig/Einwohner, y = AFD/Gültige, color = Bundesland, siz
 
 #AUFGABE: Osten und Westen ####
 
-# Füge eine neue Spalte zum Datensatz hinzu, die sagt: Liegt dieser Wahlkreis im Osten oder im Westen?
+# Füge eine neue Spalte zum Datensatz hinzu, die sagt: Liegt dieser Landkreis im Osten oder im Westen?
 osten = c("Brandenburg", "Sachsen-Anhalt", "Sachsen", "Mecklenburg-Vorpommern", "Thüringen")
 ew19$osten = ew19$Bundesland %in% osten
 

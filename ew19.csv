@@ -1,5 +1,5 @@
 kreisnr;kreisname;bundesland;einwohner;junge;alte;einkommen;wahlberechtigte;waehler;ungueltige;gueltige;Union;SPD;Gruene;Linke;AFD;FDP;DIEM25;Volt
-1001;Flensburg, Stadt;Schleswig-Holstein;88500;27.3;25.8;131600;70429;39695;285;39410;6829;5676;14604;2349;2477;1987;222;285
+1001;Flensburg, Stadt;Schleswig-Holstein;88500;27.3;25.8;18481;70429;39695;285;39410;6829;5676;14604;2349;2477;1987;222;285
 1002;Kiel, Landeshauptstadt;Schleswig-Holstein;247900;29.1;23.8;18810;186180;109613;580;109033;18313;17912;40326;6492;6458;5271;675;1137
 1003;Lübeck, Hansestadt;Schleswig-Holstein;216300;21.5;29.3;19575;166530;90946;461;90485;18416;17566;28633;4231;6773;4174;332;935
 1004;Neumünster, Stadt;Schleswig-Holstein;79300;20.5;28.7;18922;60225;29036;231;28805;7039;5286;7809;1041;2761;1539;62;114
