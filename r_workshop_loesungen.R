@@ -18,7 +18,7 @@
 #### 1.1 Basics ####
 
 # R als Taschenrechner ####
-# cmd + enter schickt Befehle in die Konsole
+# Cmd/Strg + Enter schickt Befehle in die Konsole
 
 3 * (5 + 6)^2 / 4
 
@@ -74,7 +74,7 @@ paste("Das Ergebnis von", x, "plus", y, "ist", x + y) # Man kann auch Variablen 
 
 # Working Directory ####
 getwd()
-setwd("path/to/your/folder") #Shortcut: cmd + shift + H
+setwd("path/to/your/folder") #Shortcut: Ctrl/Strg + Shift + H
 # Ohne Working Directory: R geht davon aus,
 # dass wir uns im Standard-Ordner befinden 
 
@@ -82,7 +82,7 @@ setwd("path/to/your/folder") #Shortcut: cmd + shift + H
 
 # Datensätze einlesen ####
 ?read.csv #Hilfeseite aufrufen
-ew19 = read.csv("ew19.csv", fileEncoding = "utf-8", stringsAsFactors = F) # immer schön das Encoding prüfen!
+ew19 = read.csv("ew19.csv", fileEncoding = "utf-8", stringsAsFactors = F, sep = ";") # immer schön das Encoding prüfen!
 # FRAGE: was müssen wir hier einstellen, damit es richtig eingelesen wird?
 
 # Datensatz speichern
@@ -125,15 +125,15 @@ ew19[1,3]           # Erste Zeile, dritte Spalte
 ew19[,2]            # Nimm nur die zweite Spalte
 
 #FRAGE: Was bewirken wohl die folgenden Zeilen?
-ew19[3,]
-ew19[,2:4]
-ew19[c(15,55),]
+ew19[3,]          # 3. Zeile, alle Spalten
+ew19[,2:4]        # alle Zeilen, 2. bis 4. Spalte, also Spalten 2,3,4
+ew19[c(15,55),]   # Zeilen 15 und 55, alle Spalten
 
 # Noch einfacher: Der Dollar-Operator
 
 ew19$kreisname               # Eine Spalte mit dem Namen ansteuern mittels $-Operator. Das Resultat ist ein Vektor
 # FRAGE: Wie bekomme ich mithilfe des Dollar-Operators wohl das dritte Element von den Kreisnamen?
-
+ew19$kreisname[3]
 
 #### 1.5 Rechnen mit Datensätzen ####
 
@@ -141,7 +141,7 @@ ew19$Groko = ew19$Union + ew19$SPD     # Mit Spalten kann man auch rechnen!
 
 # AUFGABE: Füge eine neue Spalte hinzu namens "Gruene.anteil", die den Stimmanteil der Grünen wiedergibt.
 #          ACHTUNG: Welche Spalten brauchst du dafür?
-
+ew19$Gruene.anteil = ew19
 
 # Einige hilfreiche Funktionen
 

@@ -18,7 +18,7 @@
 #### 1.1 Basics ####
 
 # R als Taschenrechner ####
-# cmd + enter schickt Befehle in die Konsole
+# Cmd/Strg + Enter schickt Befehle in die Konsole
 
 3 * (5 + 6)^2 / 4
 
@@ -74,7 +74,7 @@ paste("Das Ergebnis von", x, "plus", y, "ist", x + y) # Man kann auch Variablen 
 
 # Working Directory ####
 getwd()
-setwd("path/to/your/folder") #Shortcut: cmd + shift + H
+setwd("path/to/your/folder") #Shortcut: Ctrl/Strg + Shift + H
 # Ohne Working Directory: R geht davon aus,
 # dass wir uns im Standard-Ordner befinden 
 
