@@ -199,24 +199,26 @@ library(tidyverse)              # Paket laden
 # Wie gemacht für Datenanalyse
 
 library(dplyr)
+
 ### Wichtigste Funktionen: ####
 ?filter()          # Filtern
-?mutate()          # Neue Spalten berechnen
+?mutate()          # Neue Spalten berechnen, Spalten überschreiben
 ?group_by()        # Nach Werten gruppieren
 ?summarize()       # Nach Gruppen zusammenfassen (Pivot-Tabellen in gut)
 ?arrange()         # Sortieren
 ?left_join()       # Datensätze mergen (SVERWEIS in gut)
 
+
 ### Nichtwähler berechnen mit mutate
 ?mutate
-ew19 = mutate(ew19, Nichtwähler = Wahlberechtigte - Wähler,
+ew19 = mutate(ew19, nichtwähler = Wahlberechtigte - Wähler,
                MigHig.Anteil = MigHig / Einwohner)
 #Man kann sogar mehrere neue Spalten hinzufügen
 
 # AUFGABE:
 # Füge eine Spalte hinzu namens "Nichtwähleranteil": "Nichtwähler" geteilt durch "Wahlberechtigte",
 # und eine namens "AfD.Anteil": Zweitstimmen für die AfD geteilt durch die Gesamtanzahl "Gültige"
-ew19 = mutate(ew19, Nichtwähler = Wahlberechtigte - Wähler,
+ew19 = mutate(ew19, nichtwähler = Wahlberechtigte - Wähler,
                AFD.Anteil = AFD / Gültige)
 
 # Mehrere Funktionen hintereinander ausführen ####
@@ -324,6 +326,23 @@ ggplot(ew19, aes(x = FDP/Gültige, y = Einkommen, color = osten, size = Einwohne
   theme_minimal() #Man kann in ggplot alles selbst gestalten. Vorgefertigte "themes" machen es einfacher.
 
 # Das geht auch mit Einkommen. Lege das Einkommen auf die x-Achse
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #### 2.3 tidyr ####
