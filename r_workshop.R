@@ -82,7 +82,7 @@ setwd("path/to/your/folder") #Shortcut: cmd + shift + H
 
 # Datensätze einlesen ####
 ?read.csv #Hilfeseite aufrufen
-ew19 = read.csv("ew19.csv", fileEncoding = "utf-8", stringsAsFactors = F, sep = ";") # immer schön das Encoding prüfen!
+ew19 = read.csv("ew19.csv", fileEncoding = "utf-8", stringsAsFactors = F) # immer schön das Encoding prüfen!
 # FRAGE: was müssen wir hier einstellen, damit es richtig eingelesen wird?
 
 # Datensatz speichern
@@ -150,7 +150,7 @@ mean()   # Arithmetisches Mittel
 median() # Median
 max()    # Maximum
 min()    # Minimum
-
+#NA konstruieren
 
 # Wie viele Einwohner haben die Landkreise zusammen? Ergibt diese Zahl Sinn?
 
@@ -175,7 +175,6 @@ barplot(ew19$einwohner[1:10], names.arg = ew19$kreisname[1:10])
 # Macht eine Grafik mit Punkten:
 
 # Anteil junger Leute vs. Anteil Grünen-Stimmen
-plot(ew19$einkommen, ew19$FDP / ew19$gueltige)
 
 # BONUS: Anteil junger Leute vs. *Anteil* Stimmen für Volt Deutschland
 
