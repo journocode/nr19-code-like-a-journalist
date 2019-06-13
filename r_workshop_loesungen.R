@@ -141,7 +141,7 @@ ew19$Groko = ew19$Union + ew19$SPD     # Mit Spalten kann man auch rechnen!
 
 # AUFGABE: Füge eine neue Spalte hinzu namens "Gruene.anteil", die den Stimmanteil der Grünen wiedergibt.
 #          ACHTUNG: Welche Spalten brauchst du dafür?
-ew19$Gruene.anteil = ew19
+ew19$Gruene.anteil = ew19$Gruene / ew19$gueltige
 
 # Einige hilfreiche Funktionen
 
@@ -153,16 +153,23 @@ min()    # Minimum
 #NA konstruieren
 
 # Wie viele Einwohner haben die Landkreise zusammen? Ergibt diese Zahl Sinn?
+sum(ew19$einwohner)
 
 # Wie viele Einwohner hat ein Landkreis im Durchschnitt?
+mean(ew19$einwohner)
 
 # Was ist der höchste Grünen-Wähler-Anteil?
+max(ew19$Gruene.anteil)
 
 # In welcher Zeile steht der Landkreis mit dem höchsten Anteil an Grünen-Wählern?
 # Tipp: ?which.max()
+which.max(ew19$Gruene.anteil)
 
 # BONUS: Wie heißt dieser Landkreis?
+ew19$kreisname[which.max(ew19$Gruene.anteil)]
 
+# BONUS: Wie hoch ist dort der Stimmanteil der Grünen?
+ew19$Gruene.anteil[which.max(ew19$Gruene.anteil)]
 
 #### 1.6 Einfache Grafiken ####
 
@@ -175,10 +182,10 @@ barplot(ew19$einwohner[1:10], names.arg = ew19$kreisname[1:10])
 # Macht eine Grafik mit Punkten:
 
 # Anteil junger Leute vs. Anteil Grünen-Stimmen
-plot(ew19$einkommen, ew19$FDP / ew19$gueltige)
+plot(ew19$junge, ew19$Gruene.anteil)
 
 # BONUS: Anteil junger Leute vs. *Anteil* Stimmen für Volt Deutschland
-plot(ew19$junge, ew19$Gruene / ew19$gueltige)
+plot(ew19$junge, ew19$Volt / ew19$gueltige)
 
 #### 1.7 Pakete mit Zusatzfunktionen laden ####
 # Für Teil 2 bitte machen! :)

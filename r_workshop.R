@@ -163,6 +163,8 @@ min()    # Minimum
 
 # BONUS: Wie heißt dieser Landkreis?
 
+# BONUS: Wie hoch ist dort der Stimmanteil der Grünen?
+
 
 #### 1.6 Einfache Grafiken ####
 
