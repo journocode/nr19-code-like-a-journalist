@@ -18,7 +18,7 @@
 #### 1.1 Basics ####
 
 # R als Taschenrechner ####
-# cmd + enter schickt Befehle in die Konsole
+# Cmd/Strg + Enter schickt Befehle in die Konsole
 
 3 * (5 + 6)^2 / 4
 
@@ -74,7 +74,7 @@ paste("Das Ergebnis von", x, "plus", y, "ist", x + y) # Man kann auch Variablen 
 
 # Working Directory ####
 getwd()
-setwd("path/to/your/folder") #Shortcut: cmd + shift + H
+setwd("path/to/your/folder") #Shortcut: Ctrl/Strg + Shift + H
 # Ohne Working Directory: R geht davon aus,
 # dass wir uns im Standard-Ordner befinden 
 
@@ -82,7 +82,7 @@ setwd("path/to/your/folder") #Shortcut: cmd + shift + H
 
 # Datensätze einlesen ####
 ?read.csv #Hilfeseite aufrufen
-ew19 = read.csv("ew19.csv", fileEncoding = "utf-8", stringsAsFactors = F, sep = ";") # immer schön das Encoding prüfen!
+ew19 = read.csv("ew19.csv", fileEncoding = "utf-8", stringsAsFactors = F) # immer schön das Encoding prüfen!
 # FRAGE: was müssen wir hier einstellen, damit es richtig eingelesen wird?
 
 # Datensatz speichern
@@ -150,7 +150,7 @@ mean()   # Arithmetisches Mittel
 median() # Median
 max()    # Maximum
 min()    # Minimum
-
+#NA konstruieren
 
 # Wie viele Einwohner haben die Landkreise zusammen? Ergibt diese Zahl Sinn?
 
@@ -162,6 +162,8 @@ min()    # Minimum
 # Tipp: ?which.max()
 
 # BONUS: Wie heißt dieser Landkreis?
+
+# BONUS: Wie hoch ist dort der Stimmanteil der Grünen?
 
 
 #### 1.6 Einfache Grafiken ####
@@ -175,7 +177,6 @@ barplot(ew19$einwohner[1:10], names.arg = ew19$kreisname[1:10])
 # Macht eine Grafik mit Punkten:
 
 # Anteil junger Leute vs. Anteil Grünen-Stimmen
-plot(ew19$einkommen, ew19$FDP / ew19$gueltige)
 
 # BONUS: Anteil junger Leute vs. *Anteil* Stimmen für Volt Deutschland
 

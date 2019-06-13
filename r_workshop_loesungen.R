@@ -18,7 +18,7 @@
 #### 1.1 Basics ####
 
 # R als Taschenrechner ####
-# cmd + enter schickt Befehle in die Konsole
+# Cmd/Strg + Enter schickt Befehle in die Konsole
 
 3 * (5 + 6)^2 / 4
 
@@ -70,11 +70,11 @@ paste("Das Ergebnis von", x, "plus", y, "ist", x + y) # Man kann auch Variablen 
 ?paste                 # Hilfeseiten aufrufen
 
 
-#### 1.3 Lesen und Schreiben ####
+#### 1.2 Lesen und Schreiben ####
 
 # Working Directory ####
 getwd()
-setwd("path/to/your/folder") #Shortcut: cmd + shift + H
+setwd("path/to/your/folder") #Shortcut: Ctrl/Strg + Shift + H
 # Ohne Working Directory: R geht davon aus,
 # dass wir uns im Standard-Ordner befinden 
 
@@ -82,88 +82,116 @@ setwd("path/to/your/folder") #Shortcut: cmd + shift + H
 
 # Datensätze einlesen ####
 ?read.csv #Hilfeseite aufrufen
-ew19 = read.csv("ew19.csv", fileEncoding = "utf-8", sep = ";") # immer schön das Encoding prüfen!
+ew19 = read.csv("ew19.csv", fileEncoding = "utf-8", stringsAsFactors = F, sep = ";") # immer schön das Encoding prüfen!
 # FRAGE: was müssen wir hier einstellen, damit es richtig eingelesen wird?
 
-
 # Datensatz speichern
-write.csv(ew19, file = "ew19_copy.csv", row.names = FALSE)  # Man kann auch u.a. das Dezimal- und das 
-# Spaltentrennzeichen festlegen, siehe ?write.csv
+write.csv(ew19, file = "ew19_copy.csv", row.names = FALSE)  # Man kann auch u.a. das Dezimal- und das Spaltentrennzeichen festlegen, siehe ?write.csv
 
 
+#### 1.3 Datenstrukturen ####
+
+# Data Frames ####
+# Tabellenförmige Datensätze
+
+ew19     # Datensatz in Konsole anzeigen
+?names() # Spaltennamen-Übersicht
+?nrow()  # Anzahl der Zeilen
+?head()  # Nur die ersten 6 Zeilen anzeigen lassen. FRAGE: Wie können wir uns die ersten *10* Zeilen ausgeben lassen?
+?str()   # Struktur vom Datensatz in der Konsole anzeigen
+?View()  # Datensatz als filter- und sortierbare Tabelle öffnen
+# Tipp: Auf den Spaltennamen hovern,
+# um Infos über die Spalte zu bekommen!
+
+# In data frames ist jede Spalte ein *Vektor*
+
+# Vektoren ####
+# Reihen von Zahlen
+
+vec = c(1, 2, 3, 4, 5)  # c() für "concatenate"
+vec = 6:10             # Vektor aus allen Zahlen zwischen der ersten und der zweiten in Einer-Schritten.
+
+# So baut man data frames selbst:
+df = data.frame(col1 = 1:5, col2 = vec, col3 = c("a", "b", "c", "d", "e"))
+# Alle Spalten müssen die gleiche Länge haben!
 
 
 #### 1.4 Suchen & Finden ####
+# Hinweis: Die meisten Programmiersprachen beginnen bei 0 mit dem zählen. R beginnt bei 1.
 
-df[1]                       # Nimm nur die erste Spalte
-df[1:2]                     # Nimm nur die ersten beiden Spalten
-df[c(1, 3)]                 # Nimm nur die erste und dritte Spalte
+vec[2]              # Zweites Element von "vec". Das zwischen den eckigen Klammern nennt man "Index"
+ew19[1,3]           # Erste Zeile, dritte Spalte
+# Data Frames haben zwei Dimensionen, deshalb brauchen wir zwei Indizes, um ein Element zu finden
+ew19[,2]            # Nimm nur die zweite Spalte
 
-df[1, ]                     # Nimm nur die erste Zeile
-df[1,3]                     # Erste Zeile, dritte Spalte
+#FRAGE: Was bewirken wohl die folgenden Zeilen?
+ew19[3,]          # 3. Zeile, alle Spalten
+ew19[,2:4]        # alle Zeilen, 2. bis 4. Spalte, also Spalten 2,3,4
+ew19[c(15,55),]   # Zeilen 15 und 55, alle Spalten
 
-df[1] + df[2]               # Mit Spalten rechnen
+# Noch einfacher: Der Dollar-Operator
 
-df["col1"] + 1              # Spalten können in eckigen Klammern auch
-                            # mit dem Namen angesteuert werden
+ew19$kreisname               # Eine Spalte mit dem Namen ansteuern mittels $-Operator. Das Resultat ist ein Vektor
+# FRAGE: Wie bekomme ich mithilfe des Dollar-Operators wohl das dritte Element von den Kreisnamen?
+ew19$kreisname[3]
 
-df$col1                     # Eine Spalte mit dem Namen
-                            # ansteuern mittels $-Operator
+#### 1.5 Rechnen mit Datensätzen ####
 
-df$neu = df$col1 + df$col2 # Neue Spalte kreieren
+ew19$Groko = ew19$Union + ew19$SPD     # Mit Spalten kann man auch rechnen!
 
-sum(df[1])
-sum(df$col1)
+# AUFGABE: Füge eine neue Spalte hinzu namens "Gruene.anteil", die den Stimmanteil der Grünen wiedergibt.
+#          ACHTUNG: Welche Spalten brauchst du dafür?
+ew19$Gruene.anteil = ew19$Gruene / ew19$gueltige
 
-mean(df$col1)
-median(df$col1)
+# Einige hilfreiche Funktionen
 
+sum()    # Summe ausrechnen 
+mean()   # Arithmetisches Mittel
+median() # Median
+max()    # Maximum
+min()    # Minimum
+#NA konstruieren
 
+# Wie viele Einwohner haben die Landkreise zusammen? Ergibt diese Zahl Sinn?
+sum(ew19$einwohner)
 
+# Wie viele Einwohner hat ein Landkreis im Durchschnitt?
+mean(ew19$einwohner)
 
-#### 1.5 Lesen und Schreiben ####
+# Was ist der höchste Grünen-Wähler-Anteil?
+max(ew19$Gruene.anteil)
 
+# In welcher Zeile steht der Landkreis mit dem höchsten Anteil an Grünen-Wählern?
+# Tipp: ?which.max()
+which.max(ew19$Gruene.anteil)
 
+# BONUS: Wie heißt dieser Landkreis?
+ew19$kreisname[which.max(ew19$Gruene.anteil)]
 
-#### 1.6 Spaß mit Daten: Funktionen mit dem Beispieldatensatz ausprobieren ####
+# BONUS: Wie hoch ist dort der Stimmanteil der Grünen?
+ew19$Gruene.anteil[which.max(ew19$Gruene.anteil)]
 
-# Spaltennamen-Übersicht
-names(ew19)
+#### 1.6 Einfache Grafiken ####
 
-# Wie viele Einwohner haben die Wahlkreise zusammen?
-sum(ew19$Einwohner) #82175300 -> ca. 82 Mio.
+# Punkte oder Linien
+plot(ew19$junge, ew19$alte)
 
-# Wie viele Einwohner hat ein Wahlkreis im Durchschnitt?
-mean(ew19$Einwohner) #274 Tausend
-median(ew19$Einwohner) #217 Tausend
+# Balken
+barplot(ew19$einwohner[1:10], names.arg = ew19$kreisname[1:10])
 
-# Füge eine neue Spalte hinzu namens "Nichtwähler" (Anzahl der Wahlberechtigten
-# Zweitstimmen minus die Anzahl der Zweitstimmen-Wähler)
-ew19$Nichtwähler = ew19$Wahlberechtigte - ew19$Wähler
+# Macht eine Grafik mit Punkten:
 
-# Was ist die höchste Anzahl Nichtwähler in einem Wahlkreis?
-max(ew19$Nichtwähler) #76455
+# Anteil junger Leute vs. Anteil Grünen-Stimmen
+plot(ew19$junge, ew19$Gruene.anteil)
 
-# Macht eine Grafik mit Punkten: Einkommen vs. *Anteil* FDP-Stimmen
-plot(ew19$Einkommen, ew19$FDP/ew19$Gültige)
-#Was kann man daraus ablesen?
+# BONUS: Anteil junger Leute vs. *Anteil* Stimmen für Volt Deutschland
+plot(ew19$junge, ew19$Volt / ew19$gueltige)
 
-## Für Fortgeschrittene ##
+#### 1.7 Pakete mit Zusatzfunktionen laden ####
+# Für Teil 2 bitte machen! :)
 
-# Was ist der höchste *Anteil* Nichtwähler?
-max(ew19$Nichtwähler / ew19$Wahlberechtigte) #0.3526753 -> 35 %
-
-# Füge eine neue Spalte namens MigHig.Anteil hinzu für den Anteil Menschen mit Migrationhintergrund?
-ew19$MigHig.Anteil = ew19$MigHig / ew19$Einwohner
-
-# In welcher Zeile steht der Wahlkreis mit dem höchsten Anteil Menschen mit Migrationhintergrund?
-?which.max #Tipp
-which.max(ew19$MigHig.Anteil) #nr 183
-
-# Wie heißt dieser Wahlkreis?
-ew19[183, 2] #Frankfurt am Main I
-
-# Wer schon fertig ist: Denkt euch noch ein paar Fragen aus!
+install.packages("tidyverse")   # Paket installieren (Internetverbindung notwendig!)
+library(tidyverse)              # Paket laden
 
 
 
