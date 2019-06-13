@@ -198,9 +198,10 @@ library(tidyverse)              # Paket laden
 #### NEXT UP:
 #### 2. Das Tidyverse ####
 
+ew19 = read.csv("ew19.csv", fileEncoding = "utf-8", stringsAsFactors = F, sep = ";") # immer schön das Encoding prüfen!
 
-#Falls noch nicht geschehen: Pakete installieren
-#install.packages(c("tidyr", "dplyr", "ggplot2"))
+# Falls noch nicht geschehen: Pakete installieren
+# install.packages(c("tidyr", "dplyr", "ggplot2"))
 
 
 #### 2.1 dplyr #### 
@@ -217,104 +218,138 @@ library(dplyr)
 
 ### Nichtwähler berechnen mit mutate
 ?mutate
-ew19 = mutate(ew19, Nichtwähler = Wahlberechtigte - Wähler)
-#Man kann sogar mehrere neue Spalten hinzufügen
+ew19 = mutate(ew19, nichtwaehler = wahlberechtigte - waehler)
 
+# Man kann auch gleich mehrere neue Spalten hinzufügen (die aufeinander aufbauen dürfen)
+ew19 = read.csv("ew19.csv", fileEncoding = "utf-8", stringsAsFactors = F, sep = ";") # immer schön das Encoding prüfen!
 # AUFGABE:
-# Füge eine Spalte hinzu namens "Nichtwähleranteil": "Nichtwähler" geteilt durch "Wahlberechtigte",
-# und eine namens "AFD.Anteil": Zweitstimmen für die AfD geteilt durch die Gesamtanzahl gültiger Stimmen
+# Füge eine Spalte hinzu namens "nichtwähleranteil":
+# "nichtwähler" geteilt durch "wahlberechtigte"
+ew19 = mutate(ew19, 
+              nichtwaehler = wahlberechtigte - waehler,
+              nichtwaehleranteil = nichtwaehler / wahlberechtigte)
+
+# Die Spalte mit dem Anteil kriegen wir auch schöner hin:
+# Aufgabe: Rechne die Null-Komma-Zahl in den Prozentwert um (bspw. 27,31)
 ew19 = mutate(ew19,
-               Nichtwähleranteil = Nichtwähler / Wahlberechtigte, 
-               AFD.Anteil = AFD / Gültige)
+              nichtwaehleranteil = nichtwaehleranteil * 100)
+
 
 # Mehrere Funktionen hintereinander ausführen ####
 
-#OPTION 1: Mehrere Zeilen --> Verbraucht Platz
-ew19 = mutate(ew19, Nichtwähler = Wahlberechtigte - Wähler)
-ew19 = arrange(ew19, Nichtwähler)
+# OPTION 1: Mehrere Zeilen --> Umständlich, viel zu tippen
+ew19 = mutate(ew19, 
+              nichtwaehler = wahlberechtigte - waehler,
+              nichtwaehleranteil = nichtwaehler / wahlberechtigte * 100)
+ew19 = arrange(ew19, -nichtwaehleranteil)
 
-#OPTION 2: Schachteln --> Unübersichtlich
-ew19 = arrange( mutate(ew19, Nichtwähler = Wahlberechtigte - Wähler), Nichtwähler)
+# OPTION 2: Schachteln --> Unübersichtlich
+ew19 = arrange(mutate(ew19, 
+                      nichtwaehler = wahlberechtigte - waehler,
+                      nichtwaehleranteil = nichtwaehler / wahlberechtigte * 100),
+               -nichtwaehleranteil)
 
-#OPTION 3 mit dplyr: Piping (%>%) --> Viel schöner!
-#Tipp: Strg + Shift + M / Cmd + Shift + M
+# OPTION 3 mit dplyr: Piping (%>%) --> Viel schöner!
+# Tipp: Strg + Shift (Umschalt) + M / Cmd + Shift (Umschalt) + M
+library(magrittr) # der piping-operator kommt aus diesem package
+# Außerdem: Autovervollständigung für Spaltennamen des gepipten dataframe
+
 ew19 = ew19 %>%
-        mutate(Nichtwähler = Wahlberechtigte - Wähler) %>%
-        arrange(-Nichtwähler)
+        mutate(nichtwaehler = wahlberechtigte - waehler,
+               nichtwaehleranteil = nichtwaehler / wahlberechtigte * 100) %>%
+        arrange(-nichtwaehleranteil)
 
 # AUFGABE:
-# Füge erst mit mutate() den Nichtwähler- und AfD-Anteil hinzu (wie in der Aufgabe zuvor)
-# und sortiere dann absteigend nach AfD-Anteil.
+# Berechne erst mit mutate() den Nichtwähleranteil,
+# dann außerdem den Anteil der Grünen und
+# sortiere dann absteigend nach Grünen-Anteil.
 ew19 = ew19 %>% 
-      mutate(Nichtwähleranteil = Nichtwähler / Wahlberechtigte, 
-             AFD.Anteil = AFD / Gültige) %>% 
-      arrange(-AFD.Anteil)
+      mutate(nichtwaehleranteil = nichtwaehler / wahlberechtigte, 
+             Gruene_anteil = Gruene / gueltige * 100) %>% 
+      arrange(-Gruene_anteil)
 
-### "group_by" und "summarize":  Pivot-Tabellen auf Speed ###
 
-# BEISPIEL: Was ist der Anteil Grünen-Wähler pro Bundesland? ####
-ew19_bl = ew19 %>% #Mit Originaldatensatz starten
-            group_by(Bundesland) %>% #Nach Bundesländern gruppieren
-            summarize(GRÜNE = sum(GRÜNE), GRÜNE.Anteil = GRÜNE / sum(Einwohner)) %>% #Zusammenfassen: Berechnet Anteil Grünen-Wähler jeweils für die Bundesländer
-            arrange(-GRÜNE) # Absteigend nach Anteil Grünen-Wähler sortieren
+#### "group_by" und "summarize":  Pivot-Tabellen auf Speed ####
+
+# BEISPIEL: Was ist der Anteil Grüne-Wähler pro Bundesland? ####
+ew19_bl = ew19 %>% # Mit Originaldatensatz starten
+            group_by(bundesland) %>% # Nach Bundesländern gruppieren
+            summarize(Gruene = sum(Gruene),
+                      Gruene_anteil = Gruene / sum(gueltige) * 100) %>%
+            # Zusammenfassen: Berechnet Anteil Grünen-Wähler jeweils für die Bundesländer
+            arrange(-Gruene_anteil) # Absteigend nach Anteil Grünen-Wähler sortieren
 
 # AUFGABE:
 # Erstelle einen Datensatz wie oben namens "ew19_bl" mit den Spalten:
-# Bundesland, Anteil Menschen mit Migrationshintergrund und AFD-Anteil
+# "bundesland", "wahlbeteiligung" und "Gruene_anteil" sowie "Union_anteil"
 # Rezept:
 # 1. Mit Originaldatensatz ew19 starten
 # 2. Nach Bundesländern gruppieren
-# 3. Zusammenfassen: Anteil Menschen mit Migrationshintergrund berechnen und AfD-Stimmen-Anteil berechnen
-# 4. Sortieren: Absteigend nach Anteil Menschen mit Migrationshintergrund
+# 3. Zusammenfassen: wahlbeteiligung berechnen - waehler / wahlberechtigte, 
+#    Anteil junger Menschen, 
+#    Grüne-Stimmen sowie Union-Stimmen summieren und durch die Summe der gültigen Stimmen teilen
+# 4. Sortieren: Absteigend nach "wahlbeteiligung"
 ew19_bl = ew19 %>%
-      group_by(Bundesland) %>% #Nach Bundesländern gruppieren
-      summarize(MigHig.Anteil = sum(MigHig) / sum(Einwohner),
-                AFD.Anteil= sum(AFD) / sum(Gültige)) %>%
-      arrange(-MigHig.Anteil)
+      group_by(bundesland) %>% #Nach Bundesländern gruppieren
+      summarize(wahlbeteiligung = sum(waehler) / sum(wahlberechtigte) * 100,
+                junge_bl = mean(junge),
+                Gruene_anteil = sum(Gruene) / sum(gueltige) * 100,
+                Union_anteil = sum(Union) / sum(gueltige) * 100) %>%
+      arrange(-wahlbeteiligung)
+
 
 
 #### 2.2 ggplot2 ####
 # Die Grammatik von Grafiken
 
 library(ggplot2)
+
 ### Wichtigste Elemente: ####
 # Teilt Plots in Bauteile auf, die einzeln eingestellt werden: Achsen, Legenden, Titel, Formen, ...
-#+          #Wie die Pipe bei dplyr werden hier die Schritte durch ein "+" verbunden 
-?ggplot()   #Startfunktion. Da stellt man den Datensatz ein und die Grundeinstellungen
-?aes()      #Innerhalb von ggplot(): Einstellen, welches Merkmal durch welche Dimension der Grafik dargestellt wird
-#geom_xx    #Grafiktypen hinzufügen. Man kann auch mehrere nehmen,
-            #z.B. "geom_point" (Scatterplot), "geom_abline" (gerade Linie) und "geom_text" (Text/Beschriftung)
+# +         # Wie die Pipe bei dplyr werden hier die Schritte durch ein "+" verbunden 
+?ggplot()   # Startfunktion. Da stellt man den Datensatz ein und die Grundeinstellungen
+?aes()      # Innerhalb von ggplot(): Einstellen, welches Merkmal durch welche Dimension der Grafik dargestellt wird
+# geom_xx    # Grafiktypen hinzufügen. Man kann auch mehrere nehmen,
+            # z.B. "geom_point" (Scatterplot), "geom_abline" (gerade Linie) und "geom_text" (Text/Beschriftung)
 
 
-#Ziel: Gibt es einen Zusammenhang zwischen dem Anteil Menschen mit Migrationshintergrund und dem AfD-Anteil?
-## ACHTUNG: Korrelation != Kausalität !!!
+# Ziel: Gibt es einen Zusammenhang zwischen
+# dem Anteil junger Menschen und dem Grüne-Anteil?
+# ACHTUNG: Korrelation != Kausalität !!!
 
-#BEISPIEL: Scatterplot (Streudiagramm): Anteil Menschen mit Migrationshintergrund vs. AfD-Anteil pro Bundesland ####
+# BEISPIEL: Scatterplot (Streudiagramm): Anteil junger Menschen vs. Grüne-Anteil pro Bundesland ####
 # Anforderungen: 
-#  für jedes Bundesland soll ein Punkt da sein
-#  auf der x-Achse soll der Anteil Menschen mit Migrationshintergrund sein
-#  auf der y-Achse soll der AfD-Anteil sein
-#  jeder Punkt soll mit dem Namen des Bundeslandes beschriftet sein
+#   für jedes Bundesland soll ein Punkt da sein
+#   auf der x-Achse soll der Anteil junger Menschen sein
+#   auf der y-Achse soll der Grüne-Anteil sein
+#   jeder Punkt soll mit dem Namen des Bundeslandes beschriftet sein
 
-ggplot(ew19_bl, aes(x = MigHig.Anteil, y = AFD.Anteil, label = Bundesland)) + #Spalten auf die Dimensionen der Grafik verteilen
-      geom_point(size=5, color = "orange") + # Punkte für Streudiagramm hinzufügen
-      geom_text(hjust=0.5, vjust = 2) + #Beschriftung hinzufügen
-      labs(x = "Anteil Menschen mit Migrationshintergrund", y = "Stimmenanteil der AfD") + #gib dem Plot schöne Achsenbeschriftungen
-      ggtitle("Im Osten gibt es wenig Menschen mit Migrationshintergrund, aber viele AfD-Wähler") #gib dem Chart einen schönen Titel
+# Spalten auf die Dimensionen der Grafik verteilen
+ggplot(ew19_bl, aes(x = junge_bl, y = Gruene_anteil, label = bundesland)) +
+  # Punkte für Streudiagramm hinzufügen: 
+  geom_point(size=5, color = "orange") +
+  # Beschriftung hinzufügen:
+  geom_text(hjust=0.5, vjust = 2) +
+  # gib dem Plot schöne Achsenbeschriftungen:
+  labs(x = "Anteil junger Menschen", y = "Stimmenanteil der Grüne") +
+  # gib dem Chart eine eindeutige Überschrift:
+  ggtitle("In den Stadtstaaten gibt es viele junge Menschen, und viele Grüne-Wähler")
 
-#FRAGE: Was erkennt man hier?
 
-#Ein genauerer Blick auf die einzelnen Wahlkreise.
-#BEISPIEL 2: Scatterplot: Anteil Menschen mit Migrationshintergrund vs. AfD-Anteil pro Wahlkreis, ####
+# FRAGE: Was erkennt man hier?
+
+# Ein genauerer Blick auf die einzelnen Wahlkreise.
+# BEISPIEL 2: Scatterplot: Anteil Menschen mit Migrationshintergrund vs. AfD-Anteil pro Wahlkreis, ####
 #            eingefärbt nach Bundesland, Größe nach Anzahl der Wähler
-# Anforderungen: 
-#  für jeden Wahlkreis soll ein Punkt da sein
-#  auf der x-Achse soll der Anteil Menschen mit Migrationshintergrund sein
-#  auf der y-Achse soll der AfD-Anteil sein
-#  jeder Punkt soll nach dem Bundesland eingefärbt sein
-#  die Größe des Punktes soll sich nach der Anzahl Wähler im Wahlkreis richten
 
-ggplot(ew19, aes(x = MigHig/Einwohner, y = AFD.Anteil, color = Bundesland, size = Wähler)) +
+# Anforderungen: 
+#   für jeden Wahlkreis soll ein Punkt da sein
+#   auf der x-Achse soll der Anteil junger Menschen sein
+#   auf der y-Achse soll der Grüne-Anteil sein
+#   jeder Punkt soll nach dem Bundesland eingefärbt sein
+#   die Größe des Punktes soll sich nach der Anzahl Wähler im Wahlkreis richten
+
+ggplot(ew19, aes(x = junge, y = Gruene_anteil, color = bundesland, size = waehler)) +
       geom_point() #+
       #theme_minimal() #Man kann in ggplot alles selbst gestalten. Vorgefertigte "themes" machen es einfacher.
 
@@ -322,11 +357,25 @@ ggplot(ew19, aes(x = MigHig/Einwohner, y = AFD.Anteil, color = Bundesland, size 
 
 # Füge eine neue Spalte zum Datensatz hinzu, die sagt: Liegt dieser Wahlkreis im Osten oder im Westen?
 osten = c("Brandenburg", "Sachsen-Anhalt", "Sachsen", "Mecklenburg-Vorpommern", "Thüringen")
-ew19$osten = ew19$Bundesland %in% osten
+ew19$osten = ew19$bundesland %in% osten
 
 # Mach BEISPIEL 2 nochmal, nur diesmal nach Osten oder Westen eingefärbt
-ggplot(ew19, aes(x = MigHig/Einwohner, y = AFD.Anteil, color = osten, size = Wähler)) + geom_point()
+ggplot(ew19, aes(x = junge, y = Gruene_anteil, color = osten, size = waehler)) + 
+  geom_point()
 # Das geht auch mit Einkommen. Lege das Einkommen auf die x-Achse
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #### 2.3 tidyr ####
 # Die Philosophie der sauberen Daten
